@@ -1,6 +1,5 @@
 import { useMachine } from "@xstate/react";
 import { createMachine, assign } from "xstate";
-import { produce } from "immer";
 
 type ContextType = {
   value: number | string;
@@ -33,15 +32,9 @@ export const typesMachine = createMachine({
         TOGGLE: {
           target: "number",
           actions: assign((context) => {
-            // return (context.type = "number"), (context.value = 1);
             context = { value: 1, otherProp: "otherProp" };
             return context;
           }),
-          // actions: assign({
-          //   type: "number",
-          //   value: 1,
-          //   otherProp: "otherProp",
-          // }),
         },
       },
     },
@@ -54,10 +47,16 @@ export function TypesMachineComponent() {
 
   return (
     <div>
-      <div>Type:</div>
+      <div>State:</div>
       <div>{JSON.stringify(state.value)}</div>
-      <div>Context:</div>
+      <div>Value:</div>
       <div>{JSON.stringify(state.context.value)}</div>
+      {state.context.otherProp && (
+        <>
+          <div>OtherProp:</div>
+          <div>{JSON.stringify(state.context?.otherProp)}</div>
+        </>
+      )}
       <button
         onClick={() =>
           send({
